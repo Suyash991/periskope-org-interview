@@ -1,4 +1,4 @@
-# Periskope — Full-Stack Engineer Take-Home Assignment
+  # Periskope — Full-Stack Engineer Take-Home Assignment
 
 Welcome! This assignment evaluates your proficiency with core elements of our tech stack. Please read through all instructions before beginning
 
@@ -6,7 +6,7 @@ Welcome! This assignment evaluates your proficiency with core elements of our te
 
 Your task is to replicate a WhatsApp group management interface. The screen displays a list of WhatsApp groups associated with a phone number.
 
-### Reference Design
+### Reference Design`
 
 ![UI Reference](https://i.postimg.cc/d0kFzwrN/290398091-452f9962-d017-4b3d-8d37-ab5942e91659.png)
 
