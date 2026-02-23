@@ -1,18 +1,26 @@
 import type { Request, Response, NextFunction } from "express";
 import {
+  addMemberToGroup,
   createGroup,
   findGroupById,
+  listGroupLogs,
+  listGroupMembers,
   listGroups,
+  listGroupsForMember,
   removeMemberFromGroup,
 } from "../services/group.service";
 
 export async function getGroups(
-  _req: Request,
+  req: Request,
   res: Response,
   next: NextFunction
 ): Promise<void> {
   try {
-    const groups = await listGroups();
+    const memberId = req.query.memberId;
+    const groups =
+      typeof memberId === "string" && memberId.length > 0
+        ? await listGroupsForMember(memberId)
+        : await listGroups();
     res.status(200).json({ data: groups });
   } catch (error) {
     next(error);
@@ -27,6 +35,7 @@ export async function createGroupHandler(
   try {
     const name = req.body.name as string | undefined;
     const label = req.body.label as string | undefined;
+    const memberId = req.body.memberId as string | undefined;
 
     if (!name || name.trim().length === 0) {
       res.status(400).json({ error: "name is required" });
@@ -36,6 +45,7 @@ export async function createGroupHandler(
     const group = await createGroup({
       name: name.trim(),
       label: label?.trim() || null,
+      memberId,
     });
 
     res.status(201).json({ data: group });
@@ -90,6 +100,72 @@ export async function leaveGroup(
 
     const result = await removeMemberFromGroup(rawGroupId, memberId);
     res.status(200).json({ data: result });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function addGroupMember(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
+  try {
+    const rawGroupId = req.params.groupId;
+    const memberId = req.body.memberId as string | undefined;
+
+    if (typeof rawGroupId !== "string") {
+      res.status(400).json({ error: "Invalid groupId" });
+      return;
+    }
+
+    if (!memberId) {
+      res.status(400).json({ error: "memberId is required" });
+      return;
+    }
+
+    const result = await addMemberToGroup(rawGroupId, memberId);
+    res.status(200).json({ data: result });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function getGroupMembers(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
+  try {
+    const rawGroupId = req.params.groupId;
+
+    if (typeof rawGroupId !== "string") {
+      res.status(400).json({ error: "Invalid groupId" });
+      return;
+    }
+
+    const members = await listGroupMembers(rawGroupId);
+    res.status(200).json({ data: members });
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function getGroupLogs(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
+  try {
+    const rawGroupId = req.params.groupId;
+
+    if (typeof rawGroupId !== "string") {
+      res.status(400).json({ error: "Invalid groupId" });
+      return;
+    }
+
+    const logs = await listGroupLogs(rawGroupId);
+    res.status(200).json({ data: logs });
   } catch (error) {
     next(error);
   }

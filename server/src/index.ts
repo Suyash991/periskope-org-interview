@@ -1,5 +1,6 @@
 import express from "express";
 import groupRouter from "./routes/group";
+import memberRouter from "./routes/member";
 import { errorHandler } from "./middleware/errorHandler";
 
 const app = express();
@@ -12,6 +13,7 @@ app.get("/health", (_req, res) => {
 });
 
 app.use("/api/groups", groupRouter);
+app.use("/api/members", memberRouter);
 
 app.use(errorHandler);
 

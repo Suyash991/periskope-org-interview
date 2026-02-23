@@ -23,3 +23,7 @@ pnpm-debug.log*
 # OS/editor files
 .DS_Store
 .vscode/
+
+# Local docs/notes
+techspec.md
+JD.md
