@@ -1,9 +1,14 @@
 import { Pool } from "pg";
 
+const databaseUrl = process.env.DATABASE_URL;
+
+if (!databaseUrl) {
+  throw new Error("Missing DATABASE_URL");
+}
+
+const useSsl = process.env.PGSSL === "true";
+
 export const pool = new Pool({
-  user: "suyashparashar",
-  host: "localhost",
-  database: "whatsappGroup",
-  password: "password",
-  port: 5432,
+  connectionString: databaseUrl,
+  ssl: useSsl ? { rejectUnauthorized: false } : false,
 });
